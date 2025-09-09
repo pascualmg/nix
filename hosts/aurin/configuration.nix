@@ -6,11 +6,13 @@
 
   imports = [
     ./hardware-configuration.nix
-    <home-manager/nixos> # Solo esto para Home Manager
+    
   ];
 
-  # ===== UNFREE =====
+    # ===== UNFREE & OVERLAYS =====
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [ "qbittorrent-4.6.4" ];
+  
 
   # ===== HARDWARE RTX 5080 + AUDIO OPTIMIZADO =====
   hardware = {
@@ -36,7 +38,7 @@
       nvidiaSettings = true;
       forceFullCompositionPipeline = true;
       powerManagement.enable = true;
-      nvidiaPersistenced = true;
+      # nvidiaPersistenced = true;
     };
 
     # ===== AUDIO OPTIMIZADO PARA FIIO K7 =====
@@ -540,11 +542,7 @@ console = {
       windowManager.xmonad = {
         enable = true;
         enableContribAndExtras = true;
-        config = pkgs.writeText "xmonad.hs"
-          (if builtins.pathExists "/home/passh/.config/xmonad/xmonad.hs" then
-            builtins.readFile "/home/passh/.config/xmonad/xmonad.hs"
-          else
-            "-- XMonad config placeholder");
+        config = ./xmonad/xmonad.hs;
       };
 
       desktopManager.xfce.enable = true;
@@ -650,17 +648,17 @@ console = {
       };
     };
 
-    open-webui = {
-      enable = true;
-      port = 3000;
-      host = "0.0.0.0";
-      environment = {
-        # Configurar para usar tu instancia local de Ollama
-        OLLAMA_API_BASE_URL = "http://localhost:11434";
-        # Otras configuraciones opcionales
-        WEBUI_AUTH = "false"; # Habilitar autenticación (opcional)
-      };
-    };
+    # open-webui = {
+    #   enable = true;
+    #   port = 3000;
+    #   host = "0.0.0.0";
+    #   environment = {
+    #     # Configurar para usar tu instancia local de Ollama
+    #     OLLAMA_API_BASE_URL = "http://localhost:11434";
+    #     # Otras configuraciones opcionales
+    #     WEBUI_AUTH = "false"; # Habilitar autenticación (opcional)
+    #   };
+    # };
 
     # ===== SERVICIOS VIRTUALIZACIÓN (AÑADIDO) =====
     spice-vdagentd.enable = true; # Para mejor integración con SPICE
